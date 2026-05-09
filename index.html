@@ -534,13 +534,77 @@
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
   ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
+  /* ── HAMBURGER ── */
+  .nav-hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+    background: none;
+    border: none;
+  }
+  .nav-hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--muted);
+    border-radius: 2px;
+    transition: all 0.3s;
+  }
+  .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); background: var(--accent); }
+  .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+  .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); background: var(--accent); }
+
+  .nav-mobile {
+    display: none;
+    position: fixed;
+    top: 57px;
+    left: 0; right: 0;
+    background: rgba(8, 12, 18, 0.97);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 1.2rem 2rem;
+    z-index: 99;
+    flex-direction: column;
+    gap: 0;
+  }
+  .nav-mobile.open { display: flex; }
+  .nav-mobile a {
+    color: var(--muted);
+    text-decoration: none;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--border);
+    transition: color 0.2s;
+    letter-spacing: 0.5px;
+  }
+  .nav-mobile a:last-child { border-bottom: none; }
+  .nav-mobile a:hover { color: var(--accent); }
+
   /* ── RESPONSIVE ── */
   @media (max-width: 768px) {
     .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-    .hero-stats { gap: 2rem; }
+    .hero-stats { gap: 1.5rem; flex-wrap: wrap; }
+    .stat-num { font-size: 1.8rem; }
     nav ul { display: none; }
+    .nav-hamburger { display: flex; }
     .contact-card { padding: 2.5rem 1.5rem; }
     h1 { letter-spacing: -1px; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .cert-grid { grid-template-columns: 1fr; }
+    .dash-info { flex-direction: column; }
+    .dash-kpis { justify-content: flex-start; }
+    .hero-actions { flex-direction: column; }
+    .hero-actions .btn { width: 100%; justify-content: center; }
+    section { padding: 4rem 0; }
+  }
+
+  @media (max-width: 480px) {
+    .container { padding: 0 1.2rem; }
+    nav .inner { padding: 0 1.2rem; }
+    h1 { font-size: clamp(2.4rem, 10vw, 3.5rem); }
   }
 </style>
 </head>
@@ -558,8 +622,19 @@
       <li><a href="#certifications">certs</a></li>
       <li><a href="#contact">contact</a></li>
     </ul>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+<div class="nav-mobile" id="navMobile">
+  <a href="#about" onclick="closeMenu()">about</a>
+  <a href="#experience" onclick="closeMenu()">experience</a>
+  <a href="#projects" onclick="closeMenu()">projects</a>
+  <a href="#dashboards" onclick="closeMenu()">dashboards</a>
+  <a href="#certifications" onclick="closeMenu()">certs</a>
+  <a href="#contact" onclick="closeMenu()">contact</a>
+</div>
 
 <!-- HERO -->
 <section id="hero">
@@ -606,7 +681,7 @@
           <div class="stat-label">B1 · R/3 · HANA</div>
         </div>
         <div>
-          <div class="stat-num">5+</div>
+          <div class="stat-num">7+</div>
           <div class="stat-label">proyectos</div>
         </div>
       </div>
@@ -827,10 +902,55 @@
         </div>
       </div>
 
+      <div class="proj-card">
+        <div class="proj-icon">🛒</div>
+        <div class="proj-title">MiniMarket POS</div>
+        <div class="proj-desc">Sistema de Punto de Venta completo para mini mercados. Gestión de productos, ventas, caja e inventario con reportes integrados. Autenticación segura con ASP.NET Identity.</div>
+        <div class="proj-tags">
+          <span class="tag blue">ASP.NET Core 10</span><span class="tag">SQL Server</span><span class="tag">EF Core</span><span class="tag">Identity</span>
+        </div>
+        <div class="proj-links">
+          <a href="https://github.com/Eufragio/minimarket-pos" target="_blank" class="proj-link">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.92.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-icon">🎓</div>
+        <div class="proj-title">Sistema Gestión Academias</div>
+        <div class="proj-desc">Plataforma de gestión para academias educativas. Control de alumnos, instructores, cursos, inscripciones y pagos. Reportes exportables a Excel con ClosedXML.</div>
+        <div class="proj-tags">
+          <span class="tag blue">ASP.NET Core 10</span><span class="tag">SQL Server</span><span class="tag">EF Core</span><span class="tag">ClosedXML</span>
+        </div>
+        <div class="proj-links">
+          <a href="https://github.com/Eufragio/sistema-gestion-academias" target="_blank" class="proj-link">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.92.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-icon">🏨</div>
+        <div class="proj-title">Hotel Management System</div>
+        <div class="proj-desc">PMS hotelero full stack con Clean Architecture y CQRS. API ASP.NET Core 10 + frontend React/TypeScript. Reservas en tiempo real con SignalR y autenticación JWT.</div>
+        <div class="proj-tags">
+          <span class="tag blue">ASP.NET Core 10</span><span class="tag blue">React</span><span class="tag blue">TypeScript</span><span class="tag">CQRS</span><span class="tag">SignalR</span><span class="tag">JWT</span>
+        </div>
+        <div class="proj-links">
+          <a href="https://github.com/Eufragio/hotel-management-system" target="_blank" class="proj-link">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.92.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+
     </div>
 
     <div style="text-align:center; margin-top: 2rem; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.78rem;">
-      ✦ Más proyectos personales próximamente en GitHub
+      ✦ Más proyectos disponibles en GitHub
     </div>
   </div>
 </section>
@@ -1063,6 +1183,18 @@
   function openLightbox(id) { document.getElementById(id).classList.add('active'); document.body.style.overflow='hidden'; }
   function closeLightbox(el) { el.classList.remove('active'); document.body.style.overflow=''; }
   document.addEventListener('keydown', e => { if(e.key==='Escape') document.querySelectorAll('.lightbox.active').forEach(l=>l.classList.remove('active')); });
+
+  // Hamburger menu
+  const hamburger = document.getElementById('navHamburger');
+  const mobileMenu = document.getElementById('navMobile');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+  });
+  function closeMenu() {
+    hamburger.classList.remove('open');
+    mobileMenu.classList.remove('open');
+  }
 
   // Scroll reveal
   const observer = new IntersectionObserver((entries) => {
